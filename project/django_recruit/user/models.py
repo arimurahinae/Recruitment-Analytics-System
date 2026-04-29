@@ -14,7 +14,6 @@ class User(AbstractUser):
     )
 
     phone = models.CharField(max_length=20, unique=True, null=True, blank=True, verbose_name="手机号")
-    # 允许保存完整 URL 或 base64 DataURL（因此不使用 URLField/max_length 限制）
     avatar = models.TextField(blank=True, verbose_name="头像")
     gender = models.CharField(
         max_length=10,
@@ -25,7 +24,7 @@ class User(AbstractUser):
     birth_date = models.DateField(null=True, blank=True, verbose_name="出生日期")
     bio = models.TextField(blank=True, verbose_name="简介")
 
-    # 个人资料扩展（用于个人信息管理页）
+    # 个人资料扩展
     profile_title = models.CharField(max_length=40, blank=True, verbose_name="职位/头衔")
     profile_team = models.CharField(max_length=40, blank=True, verbose_name="所属团队")
     profile_office = models.CharField(max_length=40, blank=True, verbose_name="办公地点")

@@ -1,12 +1,3 @@
-"""
-将 spiderMain/liepin_jobs.csv 预处理后导入 Django job 应用（Company / Recruiter / Job）。
-
-在 IDE 中：将工作目录设为 project/spiderMain 或 project/django_recruit，
-并配置运行此脚本；或从项目根目录：python project/spiderMain/import_data.py
-
-依赖：已安装 Django、数据库已 migrate，settings 中 MySQL 配置正确。
-"""
-
 from __future__ import annotations
 
 import csv
@@ -19,11 +10,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import unquote, urlparse
 
-# -----------------------------------------------------------------------------
-# Django 环境
-# - 本机：脚本位于 project/spiderMain，Django 在 project/django_recruit
-# - Docker：backend 镜像内 Django 在 /app；spiderMain 可能挂载到 /spiderMain
-# -----------------------------------------------------------------------------
 _THIS_DIR = Path(__file__).resolve().parent
 _PROJECT_DIR = _THIS_DIR.parent
 
@@ -37,11 +23,8 @@ def _detect_django_root() -> Path:
     candidates = []
     if env_root:
         candidates.append(Path(env_root))
-    # common docker location for this repo's backend image
     candidates.append(Path("/app"))
-    # original repo layout
     candidates.append(_PROJECT_DIR / "django_recruit")
-    # if someone mounts django_recruit directly
     candidates.append(Path("/django_recruit"))
     for c in candidates:
         try:
@@ -49,7 +32,6 @@ def _detect_django_root() -> Path:
                 return c
         except OSError:
             continue
-    # fallback to original assumption
     return _PROJECT_DIR / "django_recruit"
 
 
@@ -59,28 +41,25 @@ if str(_DJANGO_ROOT) not in sys.path:
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.environ.get("DJANGO_SETTINGS_MODULE", "config.settings"))
 
-import django  # noqa: E402
+import django
 
 django.setup()
 
-from django.db import transaction  # noqa: E402
+from django.db import transaction 
 
-from job.models import Company, Job, Recruiter  # noqa: E402
+from job.models import Company, Job, Recruiter  
 
-# 猎聘静态资源常见域名（相对路径 logo/头像需补全，否则 URLField 校验失败）
 _LIEPIN_IMG_BASE = "https://image0.liepin.com/"
 
 _CSV_NAME = "liepin_jobs.csv"
 _CSV_PATH = _THIS_DIR / _CSV_NAME
 
-# 月薪「k」解析；日薪「元/天」等不写入 salary_min/max（仅保留 job_salary 原文）
 _SALARY_K_PATTERN = re.compile(
     r"(?P<low>\d+(?:\.\d+)?)\s*[-~～至]\s*(?P<high>\d+(?:\.\d+)?)\s*[kKＫ]",
     re.UNICODE,
 )
 _SINGLE_K_PATTERN = re.compile(r"(?P<num>\d+(?:\.\d+)?)\s*[kKＫ](?:以上|起)?", re.UNICODE)
 
-# 异常薪资上界（单位：K/月），超出视为无效
 _MAX_SALARY_K = 500
 
 
@@ -118,7 +97,6 @@ def _parse_int(value: Any) -> Optional[int]:
     if s == "":
         return None
     try:
-        # 允许 "2.0"
         return int(float(s))
     except (TypeError, ValueError):
         return None
@@ -158,7 +136,6 @@ def _parse_data_info(value: Any) -> Optional[Dict[str, Any]]:
 
 
 def _normalize_labels(value: Any) -> str:
-    """将 job_labels 规范为可读文本（JSON 数组则逗号拼接）。"""
     raw = _strip_cell(value)
     if not raw:
         return ""
@@ -184,7 +161,6 @@ def _parse_refresh_time(value: Any) -> Optional[datetime]:
     s = _strip_cell(value)
     if not s or not s.isdigit():
         return None
-    # 常见：YYYYMMDDHHmmss（14 位）
     if len(s) == 14:
         try:
             return datetime.strptime(s, "%Y%m%d%H%M%S")
@@ -200,9 +176,6 @@ def _parse_refresh_time(value: Any) -> Optional[datetime]:
 
 
 def _parse_salary_k_range(salary_text: str) -> Tuple[Optional[int], Optional[int]]:
-    """
-    从薪资文案解析月薪 K 区间。日薪/面议/谈判等返回 (None, None)。
-    """
     t = _strip_cell(salary_text)
     if not t:
         return None, None
@@ -240,7 +213,6 @@ def _clip_salary_pair(lo: int, hi: int) -> Tuple[Optional[int], Optional[int]]:
 
 
 def _dedupe_rows(rows: List[Dict[str, str]]) -> Tuple[List[Dict[str, str]], int]:
-    """按 job_jobId 保留首条，去重。"""
     seen: set[str] = set()
     out: List[Dict[str, str]] = []
     dup = 0

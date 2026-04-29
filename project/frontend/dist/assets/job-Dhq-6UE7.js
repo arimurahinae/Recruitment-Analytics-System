@@ -1,0 +1,1 @@
+import{r as e}from"./request-DxBxSWku.js";function r(){return e.get("/job/dashboard/")}function n(t){return e.get("/job/list/",{params:t})}function a(t){return e.get(`/job/detail/${encodeURIComponent(t)}/`)}export{n as a,a as b,r as f};

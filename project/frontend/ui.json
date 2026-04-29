@@ -1,0 +1,158 @@
+{
+    "meta": {
+      "name": "bigscreen-dashboard-design-system",
+      "version": "1.0.0",
+      "theme": "dark-blue-tech",
+      "description": "大数据可视化大屏风格设计系统"
+    },
+  
+    "color": {
+      "primary": "#00f0ff",
+      "secondary": "#00ffa6",
+      "accent": "#ffd54f",
+      "danger": "#ff4d4f",
+  
+      "bg": {
+        "main": "#061a3a",
+        "panel": "#0b2a4a",
+        "card": "#0f3a5f"
+      },
+  
+      "border": {
+        "default": "rgba(0, 240, 255, 0.3)",
+        "active": "#00f0ff"
+      },
+  
+      "text": {
+        "primary": "#ffffff",
+        "secondary": "rgba(255,255,255,0.7)",
+        "dim": "rgba(255,255,255,0.5)"
+      }
+    },
+  
+    "gradient": {
+      "primary": "linear-gradient(90deg, #00f0ff, #00ffa6)",
+      "panelGlow": "linear-gradient(180deg, rgba(0,240,255,0.2), transparent)",
+      "borderGlow": "linear-gradient(90deg, transparent, #00f0ff, transparent)"
+    },
+  
+    "effect": {
+      "glow": {
+        "primary": "0 0 10px #00f0ff",
+        "strong": "0 0 20px #00f0ff"
+      },
+      "shadow": {
+        "card": "0 0 20px rgba(0, 240, 255, 0.15)"
+      }
+    },
+  
+    "typography": {
+      "fontFamily": "Microsoft YaHei, PingFang SC, sans-serif",
+      "title": {
+        "size": "20px",
+        "weight": "bold",
+        "color": "#00f0ff"
+      },
+      "subtitle": {
+        "size": "16px",
+        "color": "#ffffff"
+      },
+      "number": {
+        "size": "28px",
+        "weight": "bold",
+        "color": "#00f0ff"
+      },
+      "label": {
+        "size": "12px",
+        "color": "rgba(255,255,255,0.6)"
+      }
+    },
+  
+    "layout": {
+      "type": "grid",
+      "columns": 24,
+      "gap": 16,
+      "padding": 16,
+  
+      "regions": {
+        "header": { "height": 80 },
+        "leftPanel": { "span": 6 },
+        "centerMap": { "span": 12 },
+        "rightPanel": { "span": 6 },
+        "footer": { "height": 240 }
+      }
+    },
+  
+    "component": {
+      "panel": {
+        "background": "#0b2a4a",
+        "border": "1px solid rgba(0,240,255,0.3)",
+        "radius": "6px",
+        "padding": "12px",
+        "effect": "glow"
+      },
+  
+      "card": {
+        "background": "#0f3a5f",
+        "border": "1px solid rgba(0,240,255,0.2)",
+        "radius": "6px",
+        "padding": "10px"
+      },
+  
+      "dataBlock": {
+        "background": "rgba(0,240,255,0.1)",
+        "border": "1px solid #00f0ff",
+        "radius": "4px",
+        "numberColor": "#00f0ff"
+      },
+  
+      "chart": {
+        "axisColor": "rgba(255,255,255,0.3)",
+        "gridColor": "rgba(255,255,255,0.1)",
+        "lineColor": "#00f0ff",
+        "barColor": "#00ffa6",
+        "tooltipBg": "#0b2a4a"
+      },
+  
+      "map": {
+        "areaColor": "#0a3b66",
+        "borderColor": "#1e90ff",
+        "scatterColor": "#ffd54f",
+        "scatterGlow": true
+      },
+  
+      "tag": {
+        "bg": "rgba(0,240,255,0.2)",
+        "color": "#00f0ff",
+        "radius": "12px",
+        "padding": "4px 10px"
+      }
+    },
+  
+    "animation": {
+      "hoverGlow": {
+        "transition": "all 0.3s ease",
+        "effect": "0 0 10px #00f0ff"
+      },
+      "pulse": {
+        "animation": "pulse 2s infinite"
+      }
+    },
+  
+    "dataVisPattern": {
+      "kpi": {
+        "layout": "horizontal",
+        "count": 4,
+        "style": "glow-box"
+      },
+      "chartMix": [
+        "line",
+        "bar",
+        "radar",
+        "pie"
+      ],
+      "mapWithScatter": true,
+      "rankingList": true,
+      "tagCloud": true
+    }
+  }

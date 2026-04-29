@@ -1,0 +1,6 @@
+.cursor/
+venv/
+__pycache__/
+*.pyc
+*.zip
+*.tar

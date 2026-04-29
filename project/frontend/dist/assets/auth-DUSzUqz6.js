@@ -1,0 +1,1 @@
+import{r}from"./request-DxBxSWku.js";function u(t){return r.post("/auth/login/",t)}function n(t){return r.post("/auth/register/",t)}function i(){return r.get("/auth/me/")}function o(t){return r.put("/auth/me/",t)}export{u as l,i as m,n as r,o as u};

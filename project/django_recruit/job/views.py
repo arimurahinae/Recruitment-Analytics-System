@@ -1,7 +1,3 @@
-"""
-岗位数据大屏统计 API（基于 Job 模型聚合）。
-"""
-
 from __future__ import annotations
 
 import re
@@ -53,7 +49,7 @@ def _job_list_cache_key(request: HttpRequest) -> str:
 
 
 def _bucket_salary_min(qs):
-    """按月薪 K 区间统计（仅 salary_min 非空）。"""
+    """按月薪 K 区间统计"""
     labels = ["0-10K", "10-20K", "20-30K", "30-50K", "50K+"]
     buckets = {k: 0 for k in labels}
     for row in qs.filter(salary_min__isnull=False).values_list("salary_min", flat=True).iterator(chunk_size=2000):
@@ -90,14 +86,6 @@ def _wordcloud_from_labels(qs, limit: int = 80) -> List[Dict[str, Any]]:
 @require_GET
 @json_api
 def job_list(request: HttpRequest) -> JsonResponse:
-    """
-    岗位表格列表接口（支持搜索/高级筛选/分页）。
-    Query:
-      - keyword: 关键词（岗位名/公司名）
-      - city, industry, edu, work_years, company_scale
-      - min_salary, max_salary
-      - page, page_size
-    """
     _, err = _require_user(request)
     if err is not None:
         return err
@@ -177,7 +165,7 @@ def job_list(request: HttpRequest) -> JsonResponse:
 @require_GET
 @json_api
 def job_detail(request: HttpRequest, job_id: str) -> JsonResponse:
-    """岗位详情接口。"""
+    """岗位详情接口"""
     _, err = _require_user(request)
     if err is not None:
         return err

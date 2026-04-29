@@ -1,8 +1,3 @@
-"""
-城市名（query_city_name 常见取值）→ ECharts 中国地图中的省级 properties.name。
-需与 frontend/public/china.js 中各 feature 的 name 一致。
-"""
-
 from __future__ import annotations
 
 # 直辖市与特别行政区、台湾
@@ -18,31 +13,24 @@ _CITY_TO_PROVINCE: dict[str, str] = {
     "新北": "台湾",
     "高雄": "台湾",
     "台中": "台湾",
-    # 河北
     "石家庄": "河北省",
     "唐山": "河北省",
     "秦皇岛": "河北省",
     "邯郸": "河北省",
     "保定": "河北省",
     "廊坊": "河北省",
-    # 山西
     "太原": "山西省",
     "大同": "山西省",
-    # 内蒙古
     "呼和浩特": "内蒙古自治区",
     "包头": "内蒙古自治区",
     "鄂尔多斯": "内蒙古自治区",
-    # 辽宁
     "沈阳": "辽宁省",
     "大连": "辽宁省",
     "鞍山": "辽宁省",
-    # 吉林
     "长春": "吉林省",
     "吉林": "吉林省",
-    # 黑龙江
     "哈尔滨": "黑龙江省",
     "齐齐哈尔": "黑龙江省",
-    # 江苏
     "南京": "江苏省",
     "苏州": "江苏省",
     "无锡": "江苏省",
@@ -56,7 +44,6 @@ _CITY_TO_PROVINCE: dict[str, str] = {
     "连云港": "江苏省",
     "淮安": "江苏省",
     "宿迁": "江苏省",
-    # 浙江
     "杭州": "浙江省",
     "宁波": "浙江省",
     "温州": "浙江省",
@@ -66,20 +53,16 @@ _CITY_TO_PROVINCE: dict[str, str] = {
     "金华": "浙江省",
     "台州": "浙江省",
     "义乌": "浙江省",
-    # 安徽
     "合肥": "安徽省",
     "芜湖": "安徽省",
     "蚌埠": "安徽省",
-    # 福建
     "福州": "福建省",
     "厦门": "福建省",
     "泉州": "福建省",
     "漳州": "福建省",
-    # 江西
     "南昌": "江西省",
     "赣州": "江西省",
     "九江": "江西省",
-    # 山东
     "济南": "山东省",
     "青岛": "山东省",
     "烟台": "山东省",
@@ -88,21 +71,17 @@ _CITY_TO_PROVINCE: dict[str, str] = {
     "临沂": "山东省",
     "济宁": "山东省",
     "威海": "山东省",
-    # 河南
     "郑州": "河南省",
     "洛阳": "河南省",
     "开封": "河南省",
     "新乡": "河南省",
-    # 湖北
     "武汉": "湖北省",
     "宜昌": "湖北省",
     "襄阳": "湖北省",
-    # 湖南
     "长沙": "湖南省",
     "株洲": "湖南省",
     "湘潭": "湖南省",
     "衡阳": "湖南省",
-    # 广东
     "广州": "广东省",
     "深圳": "广东省",
     "珠海": "广东省",
@@ -152,7 +131,6 @@ _CITY_TO_PROVINCE: dict[str, str] = {
 
 
 def city_to_province_map_name(city: str) -> str | None:
-    """将城市简称/名称转为地图省级名称；无法识别时返回 None。"""
     if not city:
         return None
     name = city.strip()
@@ -160,13 +138,11 @@ def city_to_province_map_name(city: str) -> str | None:
         return None
     if name in _CITY_TO_PROVINCE:
         return _CITY_TO_PROVINCE[name]
-    # 常见后缀
     for suf in ("市", "县", "区", "州", "盟", "地区"):
         if name.endswith(suf) and len(name) > len(suf):
             core = name[: -len(suf)]
             if core in _CITY_TO_PROVINCE:
                 return _CITY_TO_PROVINCE[core]
-    # 自治区 / 省关键字（数据源偶发带全称）
     if "内蒙古" in name or name.startswith("内蒙古"):
         return "内蒙古自治区"
     if "广西" in name:

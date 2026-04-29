@@ -1,8 +1,3 @@
-"""
-用户相关 HTTP API（注册、登录、当前用户、登出）。
-与 `user.models.User`（AbstractUser 扩展字段）对齐。
-"""
-
 from __future__ import annotations
 
 import functools
@@ -62,7 +57,6 @@ def _normalize_gender(value: Any) -> Optional[str]:
 
 
 def user_to_dict(user: User) -> Dict[str, Any]:
-    """返回可序列化的用户资料（与模型字段对应）。"""
     return {
         "id": user.id,
         "username": user.username,
@@ -115,7 +109,6 @@ def _ok(data: Dict[str, Any], status: int = 200) -> JsonResponse:
 
 
 def json_api(view_fn: Callable[..., JsonResponse]) -> Callable[..., JsonResponse]:
-    """捕获未处理异常，返回 JSON（避免前端拿到 HTML 500 页）。"""
 
     @functools.wraps(view_fn)
     def _wrapped(request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
@@ -150,10 +143,6 @@ def json_api(view_fn: Callable[..., JsonResponse]) -> Callable[..., JsonResponse
 @require_http_methods(["POST"])
 @json_api
 def api_register(request: HttpRequest) -> JsonResponse:
-    """
-    注册：仅要求用户名非空；密码不做强度校验；不返回 Token，需用户另行登录。
-    email、phone 等仍可按需写入，不做格式校验与唯一性预检（冲突时由数据库约束返回错误）。
-    """
     data = _json_body(request)
     username = (data.get("username") or "").strip()
     password = data.get("password")
@@ -214,9 +203,6 @@ def api_register(request: HttpRequest) -> JsonResponse:
 @require_http_methods(["POST"])
 @json_api
 def api_login(request: HttpRequest) -> JsonResponse:
-    """
-    登录：username + password；成功后签发 Token 并更新 last_login。
-    """
     data = _json_body(request)
     username = (data.get("username") or "").strip()
     password = data.get("password")
@@ -247,9 +233,6 @@ def api_login(request: HttpRequest) -> JsonResponse:
 @require_http_methods(["POST", "GET"])
 @json_api
 def api_logout(request: HttpRequest) -> JsonResponse:
-    """
-    无状态 Token：客户端删除本地 Token 即可；此处返回成功便于前端统一处理。
-    """
     return _ok({})
 
 
@@ -257,7 +240,6 @@ def api_logout(request: HttpRequest) -> JsonResponse:
 @require_http_methods(["GET", "PUT"])
 @json_api
 def api_me(request: HttpRequest) -> JsonResponse:
-    """当前用户资料（需 Header: Authorization: Bearer <token>）。"""
     token = _parse_bearer_token(request)
     if not token:
         return _error("未登录", status=401)
@@ -300,7 +282,6 @@ def api_me(request: HttpRequest) -> JsonResponse:
     avatar_raw = data.get("avatar")
     if avatar_raw is not None:
         avatar_raw = str(avatar_raw).strip()
-        # 允许 URL 或 base64 DataURL，不限制长度（受数据库字段类型约束）
         user.avatar = avatar_raw
 
     bio = data.get("bio")
